@@ -1,0 +1,36 @@
+#!/bin/bash
+# original script: https://gitlab.com/machaerus/dotfiles/-/blob/master/.local/bin/scripts/polybar_healthbar.sh
+
+BATTERY_LEVEL=$(cat /sys/class/power_supply/BAT1/capacity)
+BAT_STAT="$(cat /sys/class/power_supply/BAT1/status)"
+DEAD_COLOR="#817267"
+case $BAT_STAT in
+    Full*)
+        SYMBOL_BAT="聯"
+        COLOR="#8C9440";;
+    Discharging*)
+	      SYMBOL_BAT="理"
+        COLOR="#B91E2E";;
+    *)
+        SYMBOL_BAT="ﱾ"
+        COLOR="#0F829D";;
+esac
+
+if [ "$BATTERY_LEVEL" -gt 88 ]; then
+		hp="<fc=$COLOR>   "
+elif [ "$BATTERY_LEVEL" -gt 75 ]; then
+		hp="<fc=$COLOR>   ﯜ"
+elif [ "$BATTERY_LEVEL" -gt 63 ]; then
+		hp="<fc=$COLOR>  </fc> <fc=$DEAD_COLOR>"
+elif [ "$BATTERY_LEVEL" -gt 50 ]; then
+		hp="<fc=$COLOR>  ﯜ</fc> <fc=$DEAD_COLOR>"
+elif [ "$BATTERY_LEVEL" -gt 38 ]; then
+		hp="<fc=$COLOR> </fc> <fc=$DEAD_COLOR> "
+elif [ "$BATTERY_LEVEL" -gt 25 ]; then
+		hp="<fc=$COLOR> ﯜ</fc> <fc=$DEAD_COLOR> "
+elif [ "$BATTERY_LEVEL" -gt 13 ]; then
+		hp="<fc=$COLOR></fc> <fc=$DEAD_COLOR>  "
+else
+		hp="<fc=$COLOR>ﯜ</fc> <fc=$DEAD_COLOR>  "
+fi
+echo  "[ $hp</fc> | <fc=#EDB54B>$SYMBOL_BAT</fc> ]"
